@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import AnimatedButton from "./animated-button";
 import Link from "next/link";
 import { useTypewriter, Cursor } from "react-simple-typewriter";
+import { Download } from "lucide-react";
 
 export default function HeroSection() {
   const [text] = useTypewriter({
@@ -81,6 +82,21 @@ export default function HeroSection() {
           <Link href="#contact" passHref>
             <AnimatedButton variant="outline">Get in Touch</AnimatedButton>
           </Link>
+          <a
+            href="/Mukesh_Kumar_Resume.pdf"
+            download
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Download Resume"
+          >
+            <AnimatedButton
+              variant="secondary"
+              className="flex items-center gap-2"
+            >
+              <Download className="w-5 h-5" />
+              Download Resume
+            </AnimatedButton>
+          </a>
         </motion.div>
       </motion.div>
       {/* Subtle background animation/glassmorphism effect */}
