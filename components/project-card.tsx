@@ -38,9 +38,9 @@ export default function ProjectCard({ project }: { project: Project }) {
             <Image
               src={project.thumbnail || "/placeholder.svg"}
               alt={project.title}
-              layout="fill"
-              objectFit="cover"
-              className="transition-transform duration-300 group-hover:scale-105"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="transition-transform duration-300 group-hover:scale-105 object-cover"
             />
           </div>
           <CardHeader>

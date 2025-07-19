@@ -11,12 +11,49 @@ import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  phone: z.string().optional(),
+  name: z
+    .string()
+    .min(2, { message: "Name must be at least 2 characters." })
+    .max(50, { message: "Name must be less than 50 characters." })
+    .regex(/^[a-zA-Z\s]+$/, {
+      message: "Name can only contain letters and spaces.",
+    })
+    .trim()
+    .refine((val) => val.length > 0, { message: "Name is required." }),
+
+  email: z
+    .string()
+    .email({ message: "Please enter a valid email address." })
+    .min(5, { message: "Email must be at least 5 characters." })
+    .max(100, { message: "Email must be less than 100 characters." })
+    .toLowerCase()
+    .trim(),
+
+  phone: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val) return true; // Optional field
+        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+        return phoneRegex.test(val.replace(/[\s\-\(\)]/g, ""));
+      },
+      { message: "Please enter a valid phone number." }
+    )
+    .refine(
+      (val) => {
+        if (!val) return true;
+        return val.length >= 10 && val.length <= 15;
+      },
+      { message: "Phone number must be between 10-15 digits." }
+    ),
+
   message: z
     .string()
-    .min(10, { message: "Message must be at least 10 characters." }),
+    .min(10, { message: "Message must be at least 10 characters." })
+    .max(1000, { message: "Message must be less than 1000 characters." })
+    .trim()
+    .refine((val) => val.length > 0, { message: "Message is required." }),
 });
 
 type ContactFormInputs = z.infer<typeof formSchema>;
@@ -27,6 +64,7 @@ export default function ContactSection() {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormInputs>({
     resolver: zodResolver(formSchema),
@@ -86,10 +124,17 @@ export default function ContactSection() {
               id="name"
               placeholder="Your Name"
               {...register("name")}
-              className="w-full p-3 rounded-md border border-input focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-input/50"
+              className={`w-full p-3 rounded-md border transition-all bg-input/50 ${
+                errors.name
+                  ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  : "border-input focus:ring-2 focus:ring-primary focus:border-transparent"
+              }`}
             />
             {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                {errors.name.message}
+              </p>
             )}
           </div>
           <div>
@@ -98,10 +143,15 @@ export default function ContactSection() {
               type="email"
               placeholder="Your Email"
               {...register("email")}
-              className="w-full p-3 rounded-md border border-input focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-input/50"
+              className={`w-full p-3 rounded-md border transition-all bg-input/50 ${
+                errors.email
+                  ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  : "border-input focus:ring-2 focus:ring-primary focus:border-transparent"
+              }`}
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <span className="w-1 h-1 bg-red-500 rounded-full"></span>
                 {errors.email.message}
               </p>
             )}
@@ -110,26 +160,41 @@ export default function ContactSection() {
             <Input
               id="phone"
               type="tel"
-              placeholder="Your Phone (Optional)"
+              placeholder="Your Phone (Optional) - e.g., +1234567890"
               {...register("phone")}
-              className="w-full p-3 rounded-md border border-input focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-input/50"
+              className={`w-full p-3 rounded-md border transition-all bg-input/50 ${
+                errors.phone
+                  ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  : "border-input focus:ring-2 focus:ring-primary focus:border-transparent"
+              }`}
             />
             {errors.phone && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <span className="w-1 h-1 bg-red-500 rounded-full"></span>
                 {errors.phone.message}
               </p>
             )}
           </div>
           <div>
-            <Textarea
-              id="message"
-              placeholder="Your Message"
-              {...register("message")}
-              rows={6}
-              className="w-full p-3 rounded-md border border-input focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-input/50"
-            />
+            <div className="relative">
+              <Textarea
+                id="message"
+                placeholder="Your Message (10-1000 characters)"
+                {...register("message")}
+                rows={6}
+                className={`w-full p-3 rounded-md border transition-all bg-input/50 ${
+                  errors.message
+                    ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    : "border-input focus:ring-2 focus:ring-primary focus:border-transparent"
+                }`}
+              />
+              <div className="absolute bottom-2 right-2 text-xs text-muted-foreground">
+                {watch("message")?.length || 0}/1000
+              </div>
+            </div>
             {errors.message && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <span className="w-1 h-1 bg-red-500 rounded-full"></span>
                 {errors.message.message}
               </p>
             )}

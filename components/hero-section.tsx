@@ -83,7 +83,7 @@ export default function HeroSection() {
             <AnimatedButton variant="outline">Get in Touch</AnimatedButton>
           </Link>
           <a
-            href="/Mukesh_Kumar_Resume.pdf"
+            href="https://img-projects.s3.eu-north-1.amazonaws.com/Mukesh_Resume.pdf"
             download
             target="_blank"
             rel="noopener noreferrer"
