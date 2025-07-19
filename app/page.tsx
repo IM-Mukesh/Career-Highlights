@@ -8,6 +8,7 @@ import SocialLinks from "@/components/social-links";
 import { Toaster } from "@/components/ui/toaster";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import CursorEffects from "@/components/effects/CursorEffects";
 
 export default function Home() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <CursorEffects mode="bubble" />
       <SocialLinks />
       <main>
         <HeroSection />
