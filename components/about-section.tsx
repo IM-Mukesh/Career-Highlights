@@ -74,9 +74,12 @@ export default function AboutSection() {
             viewport={{ once: true, amount: 0.3 }}
           >
             <p className="mb-6 text-muted-foreground">
-              Hi, I&apos;m Mukesh Kumar — a passionate full stack developer with
-              a strong focus on mobile app development using{" "}
-              <strong className="text-primary">React Native</strong>. I’ve built
+              Hi, I&apos;m Mukesh Kumar — a passionate full stack developer with{" "}
+              <strong className="text-primary">
+                2.5+ years of work experience
+              </strong>{" "}
+              and a strong focus on mobile app development using{" "}
+              <strong className="text-primary">React Native</strong>. I've built
               and deployed real-world projects like fantasy sports apps, admin
               dashboards, and location-based systems using technologies like{" "}
               <strong className="text-primary">Node.js</strong>,{" "}
